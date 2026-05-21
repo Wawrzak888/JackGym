@@ -15,6 +15,7 @@
             --text: #333333;
             --white: #ffffff;
             --border: #e0e6ed;
+            --success: #28a745;
         }
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -38,6 +39,24 @@
             font-size: 1.8rem;
             letter-spacing: 1px;
         }
+        /* Przycisk instalacji PWA jako baner */
+        #installBtn {
+            display: none;
+            width: 100%;
+            background-color: var(--success);
+            color: var(--white);
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: inset 0 -3px 0 rgba(0,0,0,0.2);
+            transition: background 0.2s;
+        }
+        #installBtn:hover {
+            background-color: #218838;
+        }
         .dedication {
             background-color: #fff3cd;
             color: #856404;
@@ -46,6 +65,7 @@
             font-style: italic;
             border-bottom: 1px solid #ffeeba;
             font-size: 0.95rem;
+            line-height: 1.4;
         }
         .tabs {
             display: flex;
@@ -62,6 +82,7 @@
             color: var(--accent);
             cursor: pointer;
             transition: 0.3s;
+            border-bottom: 3px solid transparent;
         }
         .tab-btn.active {
             color: var(--primary);
@@ -85,7 +106,7 @@
         .tab-content.active {
             display: block;
         }
-        /* Tabela medyczna */
+        /* Tabela medyczna z pełną responsywnością */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -104,15 +125,19 @@
         tr:hover {
             background-color: #f9fbfd;
         }
-        .emoji {
-            font-size: 1.2rem;
-            margin-right: 5px;
-        }
-        /* Opracowanie text */
+        /* Opracowanie tekstowe */
         .doc-section h2 {
             color: var(--secondary);
             border-bottom: 2px solid var(--accent);
             padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        .doc-section h2:first-child {
+            margin-top: 0;
+        }
+        .doc-section h3 {
+            color: var(--primary);
+            margin-top: 20px;
         }
         .confidence {
             background: #e2e3e5;
@@ -125,10 +150,12 @@
             background-color: var(--secondary);
             color: #d1e0e8;
             text-align: center;
-            padding: 15px;
+            padding: 20px;
             font-size: 0.85rem;
             margin-top: auto;
+            line-height: 1.5;
         }
+        /* KLUCZOWA POPRAWKA MOBILNA (FLEXBOX COLUMN) - BIEGŁE ZAWYJANIE */
         @media (max-width: 768px) {
             table, thead, tbody, th, td, tr {
                 display: block;
@@ -138,27 +165,38 @@
                 top: -9999px;
                 left: -9999px;
             }
-            tr { border: 1px solid var(--border); margin-bottom: 15px; border-radius: 8px; overflow: hidden; }
+            tr { 
+                border: 1px solid var(--border); 
+                margin-bottom: 20px; 
+                border-radius: 8px; 
+                overflow: hidden; 
+                background: var(--white);
+                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            }
             td {
                 border: none;
                 border-bottom: 1px solid var(--border);
-                position: relative;
-                padding-left: 50%;
+                padding: 12px 15px;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                box-sizing: border-box;
             }
-            td:before {
-                position: absolute;
-                top: 15px;
-                left: 15px;
-                width: 45%;
-                padding-right: 10px;
-                white-space: nowrap;
+            td:last-child {
+                border-bottom: none;
+            }
+            td::before {
+                content: attr(data-label);
                 font-weight: bold;
                 color: var(--primary);
+                margin-bottom: 5px;
+                font-size: 0.85rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                white-space: normal;
+                display: block;
+                width: 100%;
             }
-            td:nth-of-type(1):before { content: "Forma / Ligand"; }
-            td:nth-of-type(2):before { content: "Główne Wskazanie"; }
-            td:nth-of-type(3):before { content: "Opis Mechanizmu"; }
-            td:nth-of-type(4):before { content: "Uwagi Kofaktorowe"; }
         }
     </style>
 </head>
@@ -168,13 +206,15 @@
         <h1>🧬 OrthoMatrix Mg/K</h1>
     </header>
 
+    <button id="installBtn">📲 DODAJ ORTHOMATRIX DO EKRANU GŁÓWNEGO</button>
+
     <div class="dedication">
-        🎉 Dedykacja specjalna dla Jacka Bąka z okazji urodzin. Od 20-30 lat w awangardzie suplementacji sportowej – dla przyjaciela, z którym nauka spotyka się z praktyką.
+        🎉 <strong>Dedykacja specjalna dla Jacka Bąka z okazji urodzin.</strong> Od 20 lat w bezkompromisowej awangardzie suplementacji sportowej – dla przyjaciela, z którym nauka spotyka się z realną praktyką treningową. Sto lat, Jacek!
     </div>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="openTab(event, 'tabela')">Wykaz Form</button>
-        <button class="tab-btn" onclick="openTab(event, 'opracowanie')">Raport Medyczny</button>
+        <button class="tab-btn active" onclick="openTab(event, 'tabela')">📋 Wykaz Form (Matryca)</button>
+        <button class="tab-btn" onclick="openTab(event, 'opracowanie')">🔬 Głęboki Raport Medyczny</button>
     </div>
 
     <div class="content">
@@ -191,77 +231,114 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td><strong>L-Treonian Magnezu</strong></td>
-                        <td>🧠 Neurogeneza, Pamięć, Brain Fog</td>
-                        <td>Przenika barierę krew-mózg (BBB). Zwiększa gęstość postsynaptycznych receptorów NMDA i wspiera długotrwałe wzmocnienie synaptyczne (LTP).</td>
-                        <td>Wymaga optymalnego poziomu witaminy D3 do szlaków neurotroficznych.</td>
+                        <td data-label="Forma / Ligand"><strong>L-Treonian Magnezu (MgT)</strong></td>
+                        <td data-label="Główne Wskazanie">🧠 Neurogenez, LTP, Brain Fog, Migreny</td>
+                        <td data-label="Opis Mechanizmu">Nieskrępowanie przekracza barierę krew-mózg (BBB). Podnosi poziom Mg2+ w płynie mózgowo-rdzeniowym, zwiększając gęstość receptorów NMDA i plastyczność hipokampa. [cite: 36, 37, 38, 40]</td>
+                        <td data-label="Uwagi Kofaktorowe">Wymaga obecności witaminy D3 do aktywacji neurotroficznych szlaków macierzystych. [cite: 40, 149]</td>
                     </tr>
                     <tr>
-                        <td><strong>Taurynian Magnezu</strong></td>
-                        <td>⚡ Insulinooporność, Arytmia</td>
-                        <td>Indukuje translokację transporterów glukozowych GLUT4 do błony komórkowej. Zapobiega wypływowi potasu z kardiomiocytów.</td>
-                        <td>Tauryna jako osmolit ściśle zależy od wewnątrzkomórkowego sodu (Na+).</td>
+                        <td data-label="Forma / Ligand"><strong>Acetylotaurynian Magnezu (MgAT)</strong></td>
+                        <td data-label="Główne Wskazanie">👁️ Ochrona siatkówki, Ekscytotoksyczność</td>
+                        <td data-label="Opis Mechanizmu">Wysoce lipofilna forma. Redukuje poziom stresu nitrozacyjnego (3-nitrotyrozyny) oraz drastycznie wycisza ekspresję genu kalpainy-1 (nawet o 3,22 raza), hamując apoptozę. [cite: 41, 44, 46, 47]</td>
+                        <td data-label="Uwagi Kofaktorowe">Chroniona przed wolnymi rodnikami; wykazuje synergię z antyoksydantami rozpuszczalnymi w tłuszczach. [cite: 46]</td>
                     </tr>
                     <tr>
-                        <td><strong>Pidolan Magnezu</strong></td>
-                        <td>😴 Bezsenność architektoniczna, Przewlekły stres</td>
-                        <td>Związek z kwasem piroglutaminowym. Intrakorporacja z BBB wyzwala nadekspresję receptorów hamujących GABA_A i uwalnia czynnik BDNF.</td>
-                        <td>Działa wyłącznie w synergii z funkcjonalną barierą śródbłonkową mózgu.</td>
+                        <td data-label="Forma / Ligand"><strong>Pidolan Magnezu (PCA-Mg)</strong></td>
+                        <td data-label="Główne Wskazanie">😴 Bezsenność, Lęki, Spastyczność</td>
+                        <td data-label="Opis Mechanizmu">Kwas piroglutaminowy stymuluje cykl γ-glutamylowy. Na poziomie komórkowym indukuje nadekspresję receptorów hamujących GABA_A i GABA_B oraz uwalnia BDNF. [cite: 49, 52]</td>
+                        <td data-label="Uwagi Kofaktorowe">Efekt zachodzi wyłącznie przy współudziale szczelnego śródbłonka naczyniowego BBB. [cite: 53]</td>
                     </tr>
                     <tr>
-                        <td><strong>Jabłczan Magnezu</strong></td>
-                        <td>💪 Fibromialgia, Zmęczenie obwodowe</td>
-                        <td>Kwas jabłkowy wchodzi bezpośrednio w cykl Krebsa (TCA). Stabilizuje kompleks Mg-ATP w mitochondriach mięśniowych.</td>
-                        <td>Synergia z koenzymem Q10 do napędu łańcucha oddechowego.</td>
+                        <td data-label="Forma / Ligand"><strong>Taurynian Magnezu</strong></td>
+                        <td data-label="Główne Wskazanie">⚡ Insulinooporność, Glikemia, Arytmia</td>
+                        <td data-label="Opis Mechanizmu">Modyfikuje szlaki sygnałowe insuliny. Stymuluje ekspresję genu GLUT4 i wymusza jego translokację do błony komórkowej, drastycznie wychwytując glukozę. [cite: 66, 67]</td>
+                        <td data-label="Uwagi Kofaktorowe">Wymaga wyższych dawek ze względu na wysokie progi nasycenia transportera tauryny TauT. [cite: 69]</td>
                     </tr>
                     <tr>
-                        <td><strong>Orotan Magnezu / Potasu</strong></td>
-                        <td>🫀 Kardiologia, Rehabilitacja zawałowa</td>
-                        <td>Kwas orotowy napędza syntezę pirymidyn (UMP). Ratuje komórki przed apoptozą podczas uszkodzeń niedokrwienno-reperfuzyjnych.</td>
-                        <td>Wymaga bardzo wysokich dawek związku ze względu na masę liganda (~7% elementarnego kationu).</td>
+                        <td data-label="Forma / Ligand"><strong>Jabłczan Magnezu</strong></td>
+                        <td data-label="Główne Wskazanie">💪 Fibromialgia, DOMS, Energia (ATP)</td>
+                        <td data-label="Opis Mechanizmu">Kwas jabłkowy działa jako paliwo mitochondrialne w cyklu Krebsa, napędzając obrót NADH. Jon Mg2+ stabilizuje wiązania energetyczne, tworząc kompleks Mg-ATP. [cite: 55, 56, 57]</td>
+                        <td data-label="Uwagi Kofaktorowe">Zalecana synergia z Koenzymem Q10. Dodatkowo aktywnie wspiera usuwanie aluminium z tkanek. [cite: 59, 151]</td>
                     </tr>
                     <tr>
-                        <td><strong>Bisglicynian Magnezu</strong></td>
-                        <td>🧬 Uzupełnianie niedoborów, Relaks</td>
-                        <td>Rozpoznawany jako dipeptyd, wchłania się przez transportery PEPT1 omijając kanały TRPM6/7. Wolna glicyna działa hamująco w OUN.</td>
-                        <td>Idealny kofaktor dla P-5-P w optymalizacji wewnątrzkomórkowej.</td>
+                        <td data-label="Forma / Ligand"><strong>Orotan Magnezu / Potasu</strong></td>
+                        <td data-label="Główne Wskazanie">🫀 Kardiologia, Nekroza miokardium</td>
+                        <td data-label="Opis Mechanizmu">Kwas orotowy (wit. B13) transformuje do UMP i zasilając pulę nukleotydową, opóźnia otwarcie porów mPTP. Ratuje serce przed skutkami skrajnego wyrzutu adrenaliny. [cite: 70, 72, 74, 95]</td>
+                        <td data-label="Uwagi Kofaktorowe">Niska zawartość elementarnego kationu (~7%) wymusza wysokie dawkowanie rzędu 5-8g związku. [cite: 76]</td>
                     </tr>
                     <tr>
-                        <td><strong>Tlenek Magnezu (MgO)</strong></td>
-                        <td>🚽 Zaparcia idiopatyczne, Detoks</td>
-                        <td>Absorpcja systemowa rzędu zaledwie 3-4%. Celowo generuje potężny gradient osmotyczny w okrężnicy, fizycznie zwiększając masę złogów.</td>
-                        <td>Bezużyteczny w budowaniu puli wewnątrzkomórkowej. Działa jako mechaniczne narzędzie w jelicie grubym.</td>
+                        <td data-label="Forma / Ligand"><strong>Magnez Sukrosomialny</strong></td>
+                        <td data-label="Główne Wskazanie">🩸 Maksymalna retencja w erytrocytach (RBC)</td>
+                        <td data-label="Opis Mechanizmu">Matryca fosfolipidowa ustabilizowana estrami sacharozy. Wchłania się parakomórkowo w 80-90% z pominięciem kanałów TRPM6/7, bez kontaktu z enterocytami. [cite: 78, 80]</td>
+                        <td data-label="Uwagi Kofaktorowe">Kompletnie neutralny dla układu pokarmowego. Omija blokady wywołane wysokim pH żołądka. [cite: 80, 178]</td>
                     </tr>
                     <tr>
-                        <td><strong>Asparaginian Potasu</strong></td>
-                        <td>🔋 Zmęczenie, Pule beztlenowe</td>
-                        <td>Napędza wahadło jabłczanowo-asparaginianowe, umożliwiając transport elektronów prosto do macierzy mitochondrialnej.</td>
-                        <td>Podnosi u sportowców tolerancję na kwaszenie o 3-8%.</td>
+                        <td data-label="Forma / Ligand"><strong>Bisglicynian Magnezu</strong></td>
+                        <td data-label="Główne Wskazanie">🧬 Ogólny deficyt, Wyciszenie OUN</td>
+                        <td data-label="Opis Mechanizmu">Prawdziwy chelat aminokwasowy. Jelito cienkie rozpoznaje go jako dipeptyd i wchłania przez transporter PEPT1. Wolna glicyna działa kojąco na układ nerwowy. [cite: 60, 61, 64]</td>
+                        <td data-label="Uwagi Kofaktorowe">Wykazuje potężną synergię z koenzymatyczną formą witaminy B6 (P-5-P). [cite: 141]</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Forma / Ligand"><strong>Tlenek Magnezu (MgO)</strong></td>
+                        <td data-label="Główne Wskazanie">🚽 Przewlekłe zaparcia idiopatyczne</td>
+                        <td data-label="Opis Mechanizmu">Wchłanialność systemowa to zaledwie 3-4%. Pozostała część ląduje w okrężnicy, generując potężny gradient osmotyczny, który ściąga wodę i upłynnia złogi. [cite: 157, 161, 162]</td>
+                        <td data-label="Uwagi Kofaktorowe">Zupełnie bezużyteczny do odbudowy puli wewnątrzkomórkowej organizmu. [cite: 161]</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Forma / Ligand"><strong>Siarczan Magnezu</strong></td>
+                        <td data-label="Główne Wskazanie">🚨 Stany nagłe, Eklampsja, Astma</td>
+                        <td data-label="Opis Mechanizmu">Stosowany wyłącznie w infuzjach dożylnych (IV). Gwałtownie podnosi osoczowe stężenie Mg2+, siłowo obsadzając kanały NMDA i wywołując bronchodylatację. [cite: 165, 166, 167, 170]</td>
+                        <td data-label="Uwagi Kofaktorowe">Interwencja stricte kliniczna ratująca życie. Wykorzystuje zależną od napięcia fizykę Woodhulla. [cite: 165, 168]</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Forma / Ligand"><strong>Asparaginian Potasu</strong></td>
+                        <td data-label="Główne Wskazanie">🔋 Zmęczenie mięśniowe, Pułap beztlenowy</td>
+                        <td data-label="Opis Mechanizmu">Kwas asparaginowy jest kluczowym elementem wahadła jabłczanowo-asparaginianowego, przemycającym równoważniki redukcyjne NADH do mitochondriów. [cite: 98, 99]</td>
+                        <td data-label="Uwagi Kofaktorowe">Podnosi tolerancję na zakwaszenie o 3-8%. Podstawa preparatów kardiologicznych (Pananginum). [cite: 100, 137]</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Forma / Ligand"><strong>Cytrynian Potasu</strong></td>
+                        <td data-label="Główne Wskazanie">🚰 Kamica nerkowa, Alokalizacja moczu</td>
+                        <td data-label="Opis Mechanizmu">Działa silnie alkalizująco. Diametralnie podwyższa pH moczu, modyfikując krzywą rozpuszczalności szczawianów wapnia i kwasu moczowego (redukcja kamieni o 74%). [cite: 109, 110]</td>
+                        <td data-label="Uwagi Kofaktorowe">Wymaga monitorowania dobowego pH moczu. Doskonale współgra z cytrynianem magnezu. [cite: 110, 153]</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
         <div id="opracowanie" class="tab-content doc-section">
-            <h2>Raport Analityczny: Mechanika Komórkowa Magnezu i Potasu</h2>
-            <p><span class="confidence">Prawie pewne (>95%)</span> Decydującym czynnikiem terapeutycznym nie jest sam ładunek kationu, ale cząsteczka nośnikowa (ligand). To ligand określa ostateczny adres wewnątrzkomórkowy.</p>
+            <h2>Molekularna Farmakokinetyka i Mechanika Komórkowa</h2>
+            <p><span class="confidence">Prawie pewne (>95%)</span> Prawdziwym kluczem do skuteczności interwencji ortomolekularnej nie jest sam ładunek jonowy pierwiastka, lecz jego ligand anionowy. Cząsteczka nośnika determinuje absolutne powinowactwo tkankowe, metabolizm barierowy oraz szlak biochemiczny, do którego jon zostanie włączony po dysocjacji cytozolowej. [cite: 5, 6, 7]</p>
             
-            <h3>Falsyfikacja Dogmatów Klinicznych</h3>
-            <p>Medycyna konwencjonalna zatrzymała się na poziomie diagnozowania niedoborów na podstawie surowicy, ignorując całkowicie fizykę komórkową i barierę wewnątrzkomórkową. Ponadto wskaźnik ogólnej "biodostępności" w krwiobiegu jest bezużytecznym miernikiem. Sole nieorganiczne, takie jak Tlenek Magnezu, nie są "odpadem" - ich minimalna absorpcja to celowe zjawisko fizykochemiczne wykorzystujące gradient elektrochemiczny do celów osmotycznych (oczyszczanie jelit). Z kolei w stanach zagrożenia życia, blokowanie ekscytotoksyczności receptora NMDA przez siarczan magnezu zależy od napięcia i jest definiowane matematycznie (równanie Woodhulla).</p>
+            <h2>1. Maszyneria Białkowa i Termodynamika Transportu</h2>
+            <p>Klasyczny transport jelitowy polegający na kanałach kinazowych TRPM6 i TRPM7 ulega szybkiemu nasyceniu oraz cierpi z powodu konkurencji jonowej (np. nadmiaru wapnia i cynku). [cite: 10, 11, 12] Z kolei kontrola wewnątrzkomórkowego stężenia i usuwanie magnezu z komórki opiera się na transporterze kasetowym <strong>SLC41A1</strong> (antyport Na+/Mg2+). [cite: 13, 14] Ruch ten jest ściśle sprzężony termodynamicznie z dokomórkowym ruchem sodu napędzanym przez pompę Na+/K+-ATPazę. [cite: 15] Mutacje zyskania funkcji (gain-of-function) w obrębie SLC41A1 (np. mutacja punktowa A350V) zwiększają wyrzut magnezu z komórek o 70%, generując chroniczny deficyt wewnątrzkomórkowy w neuronach – mechanizm bezpośrednio powiązany z patogenezą choroby Parkinsona. [cite: 18, 19]</p>
 
-            <h3>Krytyczne Kofaktory Transportu</h3>
+            <h2>2. Krytyczne Kofaktory i Pętla Transportowa</h2>
+            <h3>Pirydoksalo-5-fosforan (P-5-P)</h3>
+            <p>Aktywna, koenzymatyczna forma witaminy B6 (P-5-P) fizycznie wiąże się z jonem Mg2+, tworząc wysoce lipofilny kompleks o ogromnym powinowactwie do błon komórkowych. [cite: 21, 22] Eskortuje on minerał bezpośrednio do cytozolu i mitochondriów, podnosząc jego retencję wewnątrzkomórkową o 30-40%. [cite: 23, 24] Stosowanie taniej formy (chlorowodorku pirydoksyny) wymaga wieloetapowej konwersji przez kinazę pirydoksalową i oksydazę PNPO w wątrobie. [cite: 26] U osób z polimorfizmami lub zaburzeniami metabolicznymi konwersja ta nie zachodzi, a niezmetabolizowana pirydoksyna blokuje receptory dla P-5-P, wywołując paradoksalną neurotoksyczność. [cite: 27, 28]</p>
+            
+            <h3>Tauryna i Modulacja Osmotyczna</h3>
+            <p>Transportowana przez system TauT (gen SLC6A6) tauryna działa wewnątrzkomórkowo jako potężny osmolit i bufor elektrochemiczny. [cite: 29, 30] Jej obecność w cytozolu stabilizuje struktury ATP-Mg, redukuje patologiczny ubytek potasu z kardiomiocytów i moduluje aktywność receptorów hamujących GABA_A. [cite: 31, 32]</p>
+
+            <h2>3. Ścisłe Mapowanie Kliniczne (Forma -> Patologia)</h2>
             <ul>
-                <li><strong>Pirydoksalo-5-fosforan (P-5-P):</strong> Aktywna forma B6 tworzy fizyczny kompleks eskortowy z Mg2+, zwiększając wewnątrzkomórkową retencję o 30-40%. Tania pirydoksyna z apteki bez konwersji wątrobowej wywołuje efekt neurotoksyczny.</li>
-                <li><strong>Wymiennik SLC41A1:</strong> Rygorystyczny balans sodowy (Na+) i sprawność pompy sodowo-potasowej stanowią absolutny imperatyw dla retencji magnezu. Maszyneria działa w oparciu o antyport Na+/Mg2+.</li>
+                <li><strong>Insulinooporność i Glikemia:</strong> Kinaza tyrozynowa receptora insulinowego jest enzymem bezwzględnie zależnym od magnezu. [cite: 119] Hipomagnezemia uniemożliwia autoryzację sygnału insulinowego w mięśniach szkieletowych. [cite: 120] Formą z wyboru jest <em>Taurynian Magnezu</em>, który omija klasyczny obwód kinazowy, stymulując bezpośrednią ekspresję i translokację transporterów GLUT4 do błon obwodowych. [cite: 121, 122]</li>
+                <li><strong>Neurodegeneracja i "Brain Fog":</strong> Chroniczny stres i zapalenie niszczą napięciowozależny blok magnezowy receptora NMDA (opisywany matematycznie równaniem Woodhulla), doprowadzając do letalnego napływu wapnia do neuronów i ekscytotoksyczności. [cite: 125, 127, 128] <em>L-Treonian Magnezu (MgT)</em> skutecznie odtwarza ten blok, podnosząc gęstość synaptyczną hipokampa. [cite: 36, 38] W głębokich uszkodzeniach <em>Acetylotaurynian (MgAT)</em> hamuje aktywność proteazy kalpainy-1 oraz redukuje stres nitrozacyjny (3-NT). [cite: 44, 46]</li>
+                <li><strong>Onkologia Eksperymentalna:</strong> <em>Askorbinian Potasu z Rybozą</em> jest badany w kontekście przywracania naturalnego gradientu jonowego w zdegenerowanych komórkach nowotworowych. [cite: 101, 103] Gwałtowny napływ K+ stymuluje wyrzut nagromadzonego sodu i glukozy, modyfikując wewnątrzkomórkowe pH i odcinając rezerwy glikolityczne odpowiedzialne za Efekt Warburga. [cite: 104, 105]</li>
             </ul>
+
+            <h2>4. Falsyfikacja Dogmatów i Paradygmat Przezskórny</h2>
+            <p>W dobie chronicznej terapii inhibitorami pompy protonowej (PPI) pacjenci masowo cierpią na ukrytą hipochlorhydrię (niedokwasotę żołądka). [cite: 171] Bez silnego środowiska kwasu solnego doustne sole mineralne (w tym cytryniany) ulegają precypitacji (osadzaniu), wywołując wzdęcia i fermentację w SIBO zamiast uwalniać jony. [cite: 173] <span class="confidence">Umiarkowana pewność (60-80%)</span> Ratunkiem w tej patologii jest aplikacja transdermalna <em>Chlorku Magnezu</em> przez barierę naskórkową, co pozwala całkowicie ominąć układ pokarmowy, barierę wątrobową oraz efekt pierwszego przejścia, podnosząc parametry tkankowe i redukując skurcze mięśniowe o 80%. [cite: 175, 176, 177]</p>
         </div>
     </div>
 
     <footer>
-        <p>Opracowanie medyczno-analityczne Tomasza Wawrzaka oraz własny, szkolony model Gemini (zaawansowanej sztucznej inteligencji opartej na głębokich sieciach neuronowych specjalnie szkolonych). <br><strong>Prawa własności do programu: Jack Gym Marki</strong></p>
+        <p>Opracowanie medyczno-analityczne: Tomasz Wawrzak & Gemini (Zaawansowany Model Językowy Google oparty na głębokich strukturach transformatorowych).</p>
+        <p><strong>Wszelkie prawa własności do programu zastrzeżone: Jack Gym Marki © 2026</strong></p>
     </footer>
 
     <script>
+        // Logika przełączania zakładek
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tab-content");
@@ -278,13 +355,40 @@
             evt.currentTarget.className += " active";
         }
         
-        // Rejestracja Service Workera dla funkcji PWA
+        // REWOLUCYJNA LOGIKA WYMUSZENIA PROMPTU INSTALACJI PWA
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Blokuje domyślne zachowanie przeglądarki
+            e.preventDefault();
+            // Zapisuje zdarzenie do zmiennej globalnej
+            deferredPrompt = e;
+            // Pokazuje użytkownikowi nasz dedykowany zielony baner
+            installBtn.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                // Wyzwala natywne okno instalacji systemu operacyjnego/przeglądarki
+                deferredPrompt.prompt();
+                // Oczekuje na decyzję użytkownika
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('OrthoMatrix PWA zainstalowane pomyślnie.');
+                    installBtn.style.display = 'none';
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        // Rejestracja mechanizmu offline (Service Worker)
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js').then((registration) => {
-                    console.log('ServiceWorker zarejestrowany z sukcesem: ', registration.scope);
+                    console.log('ServiceWorker zarejestrowany na poziomie: ', registration.scope);
                 }).catch((error) => {
-                    console.log('Błąd rejestracji ServiceWorkera: ', error);
+                    console.error('Błąd rejestracji ServiceWorkera: ', error);
                 });
             });
         }
