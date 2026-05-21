@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OrthoMatrix Mg/K</title>
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon-192.png" type="image/png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <meta name="theme-color" content="#005b96">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <style>
         :root {
             --primary: #005b96;
@@ -177,10 +181,9 @@
                 border: none;
                 border-bottom: 1px solid var(--border);
                 padding: 12px 15px;
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
                 box-sizing: border-box;
+                overflow-wrap: anywhere;
+                word-break: break-word;
             }
             td:last-child {
                 border-bottom: none;
