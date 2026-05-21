@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrthoMatrix Mg/K</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#005b96">
+    <style>
+        :root {
+            --primary: #005b96;
+            --secondary: #03396c;
+            --accent: #6497b1;
+            --bg: #f4f7f6;
+            --text: #333333;
+            --white: #ffffff;
+            --border: #e0e6ed;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+        }
+        .dedication {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            text-align: center;
+            font-style: italic;
+            border-bottom: 1px solid #ffeeba;
+            font-size: 0.95rem;
+        }
+        .tabs {
+            display: flex;
+            background-color: var(--white);
+            border-bottom: 2px solid var(--border);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--accent);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        .content {
+            padding: 20px;
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .tab-content {
+            display: none;
+            background: var(--white);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .tab-content.active {
+            display: block;
+        }
+        /* Tabela medyczna */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background-color: var(--primary);
+            color: var(--white);
+            font-weight: 600;
+        }
+        tr:hover {
+            background-color: #f9fbfd;
+        }
+        .emoji {
+            font-size: 1.2rem;
+            margin-right: 5px;
+        }
+        /* Opracowanie text */
+        .doc-section h2 {
+            color: var(--secondary);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 5px;
+        }
+        .confidence {
+            background: #e2e3e5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        footer {
+            background-color: var(--secondary);
+            color: #d1e0e8;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            tr { border: 1px solid var(--border); margin-bottom: 15px; border-radius: 8px; overflow: hidden; }
+            td {
+                border: none;
+                border-bottom: 1px solid var(--border);
+                position: relative;
+                padding-left: 50%;
+            }
+            td:before {
+                position: absolute;
+                top: 15px;
+                left: 15px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+                color: var(--primary);
+            }
+            td:nth-of-type(1):before { content: "Forma / Ligand"; }
+            td:nth-of-type(2):before { content: "Główne Wskazanie"; }
+            td:nth-of-type(3):before { content: "Opis Mechanizmu"; }
+            td:nth-of-type(4):before { content: "Uwagi Kofaktorowe"; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🧬 OrthoMatrix Mg/K</h1>
+    </header>
+
+    <div class="dedication">
+        🎉 Dedykacja specjalna dla Jacka Bąka z okazji urodzin. Od 20-30 lat w awangardzie suplementacji sportowej – dla przyjaciela, z którym nauka spotyka się z praktyką.
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab(event, 'tabela')">Wykaz Form</button>
+        <button class="tab-btn" onclick="openTab(event, 'opracowanie')">Raport Medyczny</button>
+    </div>
+
+    <div class="content">
+        <div id="tabela" class="tab-content active">
+            <h2>Matryca Celowania Tkankowego Kationów</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Forma / Ligand</th>
+                        <th>Główne Wskazanie</th>
+                        <th>Opis Mechanizmu</th>
+                        <th>Uwagi Kofaktorowe</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>L-Treonian Magnezu</strong></td>
+                        <td>🧠 Neurogeneza, Pamięć, Brain Fog</td>
+                        <td>Przenika barierę krew-mózg (BBB). Zwiększa gęstość postsynaptycznych receptorów NMDA i wspiera długotrwałe wzmocnienie synaptyczne (LTP).</td>
+                        <td>Wymaga optymalnego poziomu witaminy D3 do szlaków neurotroficznych.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Taurynian Magnezu</strong></td>
+                        <td>⚡ Insulinooporność, Arytmia</td>
+                        <td>Indukuje translokację transporterów glukozowych GLUT4 do błony komórkowej. Zapobiega wypływowi potasu z kardiomiocytów.</td>
+                        <td>Tauryna jako osmolit ściśle zależy od wewnątrzkomórkowego sodu (Na+).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pidolan Magnezu</strong></td>
+                        <td>😴 Bezsenność architektoniczna, Przewlekły stres</td>
+                        <td>Związek z kwasem piroglutaminowym. Intrakorporacja z BBB wyzwala nadekspresję receptorów hamujących GABA_A i uwalnia czynnik BDNF.</td>
+                        <td>Działa wyłącznie w synergii z funkcjonalną barierą śródbłonkową mózgu.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Jabłczan Magnezu</strong></td>
+                        <td>💪 Fibromialgia, Zmęczenie obwodowe</td>
+                        <td>Kwas jabłkowy wchodzi bezpośrednio w cykl Krebsa (TCA). Stabilizuje kompleks Mg-ATP w mitochondriach mięśniowych.</td>
+                        <td>Synergia z koenzymem Q10 do napędu łańcucha oddechowego.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Orotan Magnezu / Potasu</strong></td>
+                        <td>🫀 Kardiologia, Rehabilitacja zawałowa</td>
+                        <td>Kwas orotowy napędza syntezę pirymidyn (UMP). Ratuje komórki przed apoptozą podczas uszkodzeń niedokrwienno-reperfuzyjnych.</td>
+                        <td>Wymaga bardzo wysokich dawek związku ze względu na masę liganda (~7% elementarnego kationu).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bisglicynian Magnezu</strong></td>
+                        <td>🧬 Uzupełnianie niedoborów, Relaks</td>
+                        <td>Rozpoznawany jako dipeptyd, wchłania się przez transportery PEPT1 omijając kanały TRPM6/7. Wolna glicyna działa hamująco w OUN.</td>
+                        <td>Idealny kofaktor dla P-5-P w optymalizacji wewnątrzkomórkowej.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tlenek Magnezu (MgO)</strong></td>
+                        <td>🚽 Zaparcia idiopatyczne, Detoks</td>
+                        <td>Absorpcja systemowa rzędu zaledwie 3-4%. Celowo generuje potężny gradient osmotyczny w okrężnicy, fizycznie zwiększając masę złogów.</td>
+                        <td>Bezużyteczny w budowaniu puli wewnątrzkomórkowej. Działa jako mechaniczne narzędzie w jelicie grubym.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Asparaginian Potasu</strong></td>
+                        <td>🔋 Zmęczenie, Pule beztlenowe</td>
+                        <td>Napędza wahadło jabłczanowo-asparaginianowe, umożliwiając transport elektronów prosto do macierzy mitochondrialnej.</td>
+                        <td>Podnosi u sportowców tolerancję na kwaszenie o 3-8%.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="opracowanie" class="tab-content doc-section">
+            <h2>Raport Analityczny: Mechanika Komórkowa Magnezu i Potasu</h2>
+            <p><span class="confidence">Prawie pewne (>95%)</span> Decydującym czynnikiem terapeutycznym nie jest sam ładunek kationu, ale cząsteczka nośnikowa (ligand). To ligand określa ostateczny adres wewnątrzkomórkowy.</p>
+            
+            <h3>Falsyfikacja Dogmatów Klinicznych</h3>
+            <p>Medycyna konwencjonalna zatrzymała się na poziomie diagnozowania niedoborów na podstawie surowicy, ignorując całkowicie fizykę komórkową i barierę wewnątrzkomórkową. Ponadto wskaźnik ogólnej "biodostępności" w krwiobiegu jest bezużytecznym miernikiem. Sole nieorganiczne, takie jak Tlenek Magnezu, nie są "odpadem" - ich minimalna absorpcja to celowe zjawisko fizykochemiczne wykorzystujące gradient elektrochemiczny do celów osmotycznych (oczyszczanie jelit). Z kolei w stanach zagrożenia życia, blokowanie ekscytotoksyczności receptora NMDA przez siarczan magnezu zależy od napięcia i jest definiowane matematycznie (równanie Woodhulla).</p>
+
+            <h3>Krytyczne Kofaktory Transportu</h3>
+            <ul>
+                <li><strong>Pirydoksalo-5-fosforan (P-5-P):</strong> Aktywna forma B6 tworzy fizyczny kompleks eskortowy z Mg2+, zwiększając wewnątrzkomórkową retencję o 30-40%. Tania pirydoksyna z apteki bez konwersji wątrobowej wywołuje efekt neurotoksyczny.</li>
+                <li><strong>Wymiennik SLC41A1:</strong> Rygorystyczny balans sodowy (Na+) i sprawność pompy sodowo-potasowej stanowią absolutny imperatyw dla retencji magnezu. Maszyneria działa w oparciu o antyport Na+/Mg2+.</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>Opracowanie medyczno-analityczne Tomasza Wawrzaka oraz własny, szkolony model Gemini (zaawansowanej sztucznej inteligencji opartej na głębokich sieciach neuronowych specjalnie szkolonych). <br><strong>Prawa własności do programu: Jack Gym Marki</strong></p>
+    </footer>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.className += " active";
+        }
+        
+        // Rejestracja Service Workera dla funkcji PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then((registration) => {
+                    console.log('ServiceWorker zarejestrowany z sukcesem: ', registration.scope);
+                }).catch((error) => {
+                    console.log('Błąd rejestracji ServiceWorkera: ', error);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
